@@ -27,22 +27,20 @@ function saveToLocalStorage(event){
 		.catch((error)=>{
 			console.log(error)
 		})
-
-		//const localStorageObj=localStorage;
-		//const localStorageKeys=Object.keys(localStorageObj)
-        //for(var i=0;i<localStorageKeys.length;i++){
-			//const key=localStorage[i];
-			//const userDetailsString=localStorageObj[key];
-			//const userDetailsObj=JSON.parse(userDetailsString);
-			//showNewUserOnScreen(userDetailsObj);
-		//}
 	})
 
 function showNewUserOnScreen(user){
+     
+
+	//document.getElementById("name").value = "";
+	//document.getElementById("email").value ="";
+	//if(localStorage.getItem(user.email) !==null){
+		//removeUserFromScreen(user.email)
+	//}
 	const parentNode=document.getElementById("listOfusers");
-	const childHTML = `<li id=${user.email}>${user.name}- ${user.email}
-                                        <button onclick=deleteUser('${user.email}')> Delete User </button>
-										<button onclick=editUserDetails('${user.name}','${user.email}')>Edit User </button></li>`;
+	const childHTML = `<li id=${user._id}>${user.name}- ${user.email}
+                                        <button onclick=deleteUser('${user._id}')> Delete User </button>
+										<button onclick=editUserDetails('${user.name}','${user._id}')>Edit User </button></li>`;
 	parentNode.innerHTML=parentNode.innerHTML+childHTML;
 }
 function editUserDetails(name,email){
@@ -52,14 +50,23 @@ function editUserDetails(name,email){
 	deleteUser(email);
  }
 
-function deleteUser(emailId){
-	console.log(emailId)
+function deleteUser(userId){
+	axios.delete(`https://crudcrud.com/api/94cc02e44d194b299d383816afce8752/crudPractice/${userId}`)
+	.then(()=>{
+		removeUserFromScreen(userId);
+	})
+	.catch((err)=>{
+		console.log(err)
+	})
+	//console.log()
 	//localStorage.removeItem(emailId);
-	removeUserFromScreen(emailId);
+	//removeUserFromScreen(emailId);
 }
-function removeUserFromScreen(emailId){
+function removeUserFromScreen(userId){
 	const parentNode = document.getElementById('listOfusers');
-	const childNodeToBeDeleted = document.getElementById(emailId);
-
-	parentNode.removeChild(childNodeToBeDeleted);
+	const childNodeToBeDeleted = document.getElementById(userId);
+     if(childNodeToBeDeleted){
+		parentNode.removeChild(childNodeToBeDeleted);
+	 }
+	
 }
